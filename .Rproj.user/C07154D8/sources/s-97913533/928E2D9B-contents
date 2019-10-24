@@ -1,0 +1,1499 @@
+---
+title: "Avatar v Endgame"
+author: <h3 style="font-style:normal">Jonathan Bown</h3>
+date: <h3 style="font-style:italic">Updated `r format(Sys.time(), '%d %B, %Y')`</h3>
+output: 
+  html_document:
+    toc: TRUE
+---
+
+<style type="text/css">
+
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Normal';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Normal'), url('AVENGEANCE HEROIC AVENGER.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Normal';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Normal'), url('AVENGEANCE HEROIC AVENGER.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Italic'), url('AVENGEANCE HEROIC AVENGER AT.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Italic'), url('AVENGEANCE HEROIC AVENGER AT.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Bold'), url('AVENGEANCE HEROIC AVENGER BD.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Bold Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Bold Italic'), url('AVENGEANCE HEROIC AVENGER BI.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Bold'), url('AVENGEANCE HEROIC AVENGER BD.woff') format('woff');
+}
+@font-face {
+    font-family: 'Avengeance Heroic Avenger Bold Italic';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Avengeance Heroic Avenger Bold Italic'), url('AVENGEANCE HEROIC AVENGER BI.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Iron Man Normal';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Stark'), url('Stark.otf') format('otf');
+}
+
+body{ /* Normal  */
+      font-size: 16px;
+  }
+td {  /* Table  */
+  font-size: 15px;
+}
+h1.title {
+  font-family: 'Avengeance Heroic Avenger Bold';
+  text-align: center;
+  font-size: 65px;
+  color: #4F17A4;
+  font-weight: bold;
+}
+h1.subtitle {
+  font-family: 'Avengeance Heroic Avenger Bold';
+  font-size: 60px;
+  color: #4F17A4;
+  font-weight: normal;
+}
+h1 { /* Header 1 */
+  font-size: 32px;
+  color: DarkBlue;
+}
+h2 { /* Header 2 */
+    font-size: 28px;
+  color: DarkBlue;
+    font-style: normal;
+}
+h3 { /* Header 3 */
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  font-style: normal;
+  font-family: "Papyrus";
+  color: #2498FE;
+}
+h3.subtitle{
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  font-style: normal;
+  font-family: "Papyrus";
+  color: #2498FE;
+
+}
+h4 { /* Header 3 */
+  text-align: center;
+  font-style: normal;
+  font-size: 18px;
+  font-family: "Times New Roman", Times, serif;
+}
+code.r{ /* Code block */
+    font-size: 12px;
+}
+pre { /* Code block - determines code spacing between lines */
+    font-size: 14px;
+}
+caption {
+      color: red;
+      font-weight: bold;
+      font-size: 1.0em;
+    } 
+    tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+.avenge {
+  font-family: 'Avengeance Heroic Avenger Bold';
+  text-align: center;
+  font-size: 18px;
+  color: #4F17A4;
+  font-weight: bold;
+}
+.avat {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  font-style: normal;
+  font-family: "Papyrus";
+  color: #2498FE;
+}
+.iron {
+  text-align: center;
+  font-size: 24px;
+  font-weight: normal;
+  font-style: normal;
+  font-family: 'Iron Man Normal';
+  color: #cfa904;
+}
+.tbltxt {
+  text-align: center;
+  font-style: normal;
+  font-size: 18px;
+}
+
+</style>
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=12, fig.height=8, fig.align="center", warn=-1)
+options(warn=-1)
+library(here)
+library(kableExtra)
+library(stargazer)
+library(readxl)
+library(openxlsx)
+library(plotly)
+library(scales)
+table_nums <- captioner::captioner(prefix = "Table")
+f.ref <- function(x) {
+  stringr::str_extract(table_nums(x), "[^:]*")
+}
+```
+
+</br>
+
+```{r, echo=FALSE, out.width='50%'}
+knitr::include_graphics("gosling_papyrus.jpg")
+```
+</br>
+<center>
+(Disclaimer: I used the Papyrus font in the making of this article.)
+</center>
+
+# Is the *Avatar* record worth all the hype?
+
+Ever since *Avengers: Endgame* came to theaters we have been hearing about all the box office records that were shattered. Records such as 'Highest-grossing movie', 'Fastest to \$500 million', 'Highest initial release gross', and many, many [others](https://en.wikipedia.org/wiki/List_of_box_office_records_set_by_Avengers:_Endgame). As the weeks passed they were closing in on passing *Avatar*'s all time record for worldwide gross with many skeptical that it was even possible. Then there was the perhaps overrated re-release to try and get it over the last 26 million or so they needed to pass it up. But it all paid off on July 21st, when 15 weeks after initial release *Endgame* overcame what *Avatar* took 46 weeks to build up. This made me wonder why people weren't so sure if *Endgame* would beat *Avatar* when it clearly had the momentum from the day the first teaser trailer was released. 
+
+I came across an article titled ['Avatar's Box Office Record Is Even More Impressive After Avengers: Endgame'](https://www.cinemablend.com/news/2474332/avatars-box-office-record-is-even-more-impressive-after-avengers-endgame) in which the author lays out an argument for why *Avatar*'s record is "more impressive" than *Endgame*'s. This is one of many articles that discuss the two movies as if one is diminished by the other referencing the presence or lack of one record. Some [articles](https://www.cnbc.com/2019/06/10/4-hurdles-avengers-endgame-faces-as-it-seeks-to-dethrone-avatar.html) were even skeptical of the possibility of a new record citing that *Endgame* hadn't broken the record before week 15. After looking at this match up from every possible angle I view these two movies very differently than in the context of just all-time global box office. What follows is a discussion of box office data to objectively understand the performance of both movies. *Avatar* and *Avengers: Endgame* are two very different movies for many reasons and to compare them based on one number is a bit naive. Marvel movie goer or not the box office numbers for *Avengers: Endgame* are quite impressive by any standard. 
+
+```{r, echo=FALSE}
+#Read in box office numbers
+av_dom_weknd <- read.csv(here('avatar_domestic_weekend.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+av_dom_wekly <- read.csv(here('avatar_domestic_weekly.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+end_dom_weknd <- read.csv(here('endgame_domestic_weekend.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+end_dom_wekly <- read.csv(here('endgame_domestic_weekly.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+cols_av <- c("Date", "Rank", "Weekly", "Pct_change", "Theaters", "Tht_change", "Avg_change", "Cum_gross", "Week_no", "Tickets")
+
+cols_end <- c("Date", "Rank","Gross", "Gross_adj", "Pct_change", "Theaters", "Tht_change", "Avg_change", "Cum_gross", "Week_no", "Tickets")
+
+colnames(end_dom_wekly) <- cols_end
+colnames(end_dom_weknd) <- cols_end
+
+colnames(av_dom_wekly) <- cols_av
+colnames(av_dom_weknd) <- cols_av
+
+
+
+
+```
+
+
+# The Matchup
+
+</br>
+```{r, echo=FALSE, out.width='50%'}
+knitr::include_graphics("endavatar.jpg")
+```
+</br>
+<table>
+<caption>`r table_nums('tab_1')` Movie Attributes</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" class="avat"></th>
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Time to create</td>
+<td style="text-align: center;" class="tbltxt">3 years</td>
+<td style="text-align: center;" class="tbltxt">2.5 years</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Run Time</td>
+<td style="text-align: center;" class="tbltxt">3 hrs. 1 min.</td>
+<td style="text-align: center;" class="tbltxt">2 hrs. 40 min.</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Genre</td>
+<td style="text-align: center;" class="tbltxt"> Action / Adventure</td>
+<td style="text-align: center;" class="tbltxt">Sci-Fi Adventure</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Distributor</td>
+<td style="text-align: center;" class="tbltxt">Buena Vista</td>
+<td style="text-align: center;" class="tbltxt">Fox</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Star Actors</td>
+<td style="text-align: center;" class="tbltxt">45</td>
+<td style="text-align: center;" class="tbltxt">6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Theatrical Release Length</td>
+<td style="text-align: center;" class="tbltxt">140 Days/20 Weeks</td>
+<td style="text-align: center;" class="tbltxt">238 Days/34 Weeks</td>
+</tr>
+
+</tbody>
+</table>
+
+The ten year gap between *Avengers: Endgame* and *Avatar* is somewhat apparent. Of course ticket prices were cheaper back in 2009 and there were even less movies released during a year than there is now. We also have to keep in mind that these movies occupy slightly different genres. The comic book/superhero movie has been around long before *Avatar* and the audience could differ quite significantly. *Avatar* had fewer well-established actors in the cast especially compared to the Avengers team-up ensemble. We also know that the percentage of the U.S. population that attends theaters is declining as well as the number of theaters that show films. All things considered, there was still heavy marketing for both films that aimed to attract as many as possible to opening-weekend and throughout the release.
+
+
+
+
+## Movie Trailer
+</br>
+<thead>
+<tr class="header">
+<center>
+<img src="seat_snap.jpg" height="30%" width="30%" align="middle">
+</center>
+</tr>
+</thead>
+
+</table></br>
+</br>
+
+Anticipation for *Avengers: Endgame* had been building for 11 years so it was no surprise that ticket purchases blew up on the first day. When tickets went on sale on April 3rd, 2019 fans almost broke the internet with a several theaters and ticket services reporting crashes such as Fandango, Atom, and AMC Theaters. *Endgame* went on to break Fandango's first-day ticket pre-sales record in only six hours. Atom later reported this was the best selling one-day title and in only ten days it became the best selling movie of all time on the service. The previous record holder for Atom was 'Aqua man' and it took 32 days to obtain that title. Within one hour *Endgame* had sold three times the number of tickets *Avengers: Infinity War* sold last year which also set many records of its own. The movie trailer for *Endgame* released on December 7th, 2018 also shattered the record for most views in 24 hours surpassing its predecessor *Avengers: Infinity War*. 
+
+
+
+<table>
+<caption>`r table_nums('tab_2')` 24 Hour Trailer Views</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">AVATAR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;" class="tbltxt">289 million</td>
+<td style="text-align: center;" class="tbltxt">4-6 million</td>
+</tr>
+
+</tbody>
+</table>
+
+The viewing numbers are harder to obtain for *Avatar* because there weren't many articles back then bragging about YouTube trailer views. We also can't account for things like the NFL live showing on Sunday, Nov 2nd 2009. The trailer was shown for the first time to a live audience at the Cowboys vs. Seahawks game and on television. Another difference is that the first trailer was available only a month before release. Trailers today, and especially with Marvel movies, are shown several months in advance with the trailer for *Avengers: Endgame* coming out 5 months prior to release. Granted, the number of views of the *Avatar* was record breaking at the time for various platforms. YouTube was also a little over four years old at the time and the popularity was still in its infancy. In fact most of the top 20 trailers by views on YouTube were released after 2015. Despite all this, I think *Avatar* was successful at generating an audience early on because it was so different than the movies coming out at the time.
+
+
+## Budget and Innovation
+
+<table>
+
+<thead>
+<tr class="header">
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">AVATAR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;" class="tbltxt">$356 million</td>
+<td style="text-align: center;" class="tbltxt">$237 million</td>
+</tr>
+
+</tbody>
+</table>
+
+Clearly *Endgame*'s budget was over 100 million more than *Avatar* and even accounting for inflation it comes just under 100 million. But *Avatar* was about more than just making a great IMAX film, James Cameron basically [pioneered](https://www.hollywoodreporter.com/news/avatar-all-innovation-117052) the modern day motion capture which blends live action with CG animation. They developed a workflow that allowed Cameron to hold the camera at an actor and display their CG animation on a monitor in real time. Cameron was also able to [develop](https://www.slashfilm.com/five-innovations-in-james-camerons-avatar/) technologies called 'Simulcam', 'Facial Capture Head Rig', 'Facial Performance Replacement', and 'Fusion 3-D Camera System'. If I've learned anything thus far, its that we have *Avatar* and James Cameron to thank for all the motion capture utilized in the Marvel films. 
+
+But regarding the actual record, *Avatar*'s movie record is based on an unadjusted gross revenue during both theatrical releases. Why does everyone talk about inflation when the record is held on an unadjusted number? If we adjust every theatrical release it actually drops to 15th place! Table 6 shows the ranking in this category. Original theatrical release as well as the number of re-releases seems to have the largest determination on the 'Worldwide Gross number' that gets the most attention.
+
+Movies in earlier years tended to run in the theater longer because theaters make more money the longer they play movies and there were a limited number of titles to show. Recently agreements between the studios and theaters allow the studios to take most of the profit share up front and then reduce this amount over time, increasing the profit share of the individual theaters. The idea is to incentivize theaters to hold onto the movie for longer. In recent years this has changed not only because new movies are released every week but because of box office blockbusters such as those from Marvel Studios. Even with low margins on ticket sales in the first few weeks, theaters benefit more from concession purchases during this time which has flipped the scales to create an incentive to jump on the newest movie rather than to keep even a box office goldmine like *Avengers: Endgame* on the docket for more than seven to ten weeks. 
+
+Movie budget plays a large roll in determining marketing, cast, and ultimately box office appeal. Specifically with *Endgame* and *Avatar* we need more context because of the 10 year gap between releases. If we look at the most expensive movies of all time and check where *Avatar* fits into typical movie budgets in the year 2010 we see that it falls to 5th place.
+
+
+```{r, echo=FALSE}
+df <- read.csv(here('budgets_rank.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+colnames(df) <- c("Rank", "Movie", "Year", "Cost")
+
+df2 <- df[which(df$Year <= 2010),]
+
+
+
+
+kable(df2, row.names=FALSE, align=c('l','l', 'c', 'c'),col.names=c('Overall Rank 2019', "Movie", "Year", "Cost (MM)"), caption=table_nums('tab_3',caption="2010 Movie Budgets Ranked"),
+             longtable = FALSE, format="html")  %>%
+      kable_styling(latex_options = c("striped", "scale_down", "HOLD_position"),
+                    full_width = T, font_size = 16, position = "left")
+```
+
+
+Even for its time, *Avatar* wasn't even the most expensive movie made in 2009, 2010 or even close to the 2007 *Pirates of the Carribean: At Worlds End*. Here we have another quality piece of the *Avatar* story. Yes it was more of a limited budget yet still crazy expensive film at that time but was still much more successful than the films that had a significantly larger budget.
+
+*Avengers: Endgame* on the other hand currently ranks in 3rd place of all time most expensive films right below *Avengers: Age of Ultron* and the fourth installment of *Pirates of the Caribbean*. One thing to take away from this ranking is that clearly having a large movie budget doesn't necessarily equate to a high performing box office number. Only nine of the movies ranked here appear in the top [20](https://www.boxofficemojo.com/alltime/domestic.htm) domestic box office gross of all time. 
+
+
+```{r, echo=FALSE}
+df <- read.csv(here('budgets_rank.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+colnames(df) <- c("Rank", "Movie", "Year", "Cost")
+
+df2 <- df[1:20,]
+
+
+
+
+kable(df2, row.names=FALSE, align=c('l','l', 'c', 'c'),col.names=c('Overall Rank 2019', "Movie", "Year", "Cost (MM)"), caption=table_nums('tab_4',caption="2019 Movie Budgets Ranked"),
+             longtable = FALSE, format="html")  %>%
+      kable_styling(latex_options = c("striped", "scale_down", "HOLD_position"),
+                    full_width = T, font_size = 16, position = "left")
+```
+
+## Opening Weekend
+
+Opening weekend for *Avengers: Endgame* was every movie studios' dream come true. The domestic market set records for highest-grossing opening weekend, single day, Friday, Saturday, and Sunday. *Endgame* had the highest market share that weekend topping out at 9\%. It also set the record for highest grossing opening weekend gross in more than 40 markets. *Endgame* quickly took over by setting the record for 'Fastest to $500 million' in three days, 'Fastest to \$1 billion' in five days, 'Fastest to \$1.5 billion' in eight days, and 'Fastest to \$2 billion' in 11 days. *Avatar* was the previous record holder in that last category but it took them.......47 days. 
+
+<table>
+<caption>`r table_nums('tab_5')` Opening Weekend Totals</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" class="avat"></th>
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Domestic Gross</td>
+<td style="text-align: center;" class="tbltxt">\$357,115,007 (Inf. Adj. \$312,723,400	)</td>
+<td style="text-align: center;" class="tbltxt">$77,025,481</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt"># Theaters</td>
+<td style="text-align: center;" class="tbltxt">4,662</td>
+<td style="text-align: center;" class="tbltxt">3,452</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Revenue Per Theater</td>
+<td style="text-align: center;" class="tbltxt">\$76,601</td>
+<td style="text-align: center;" class="tbltxt">\$22,313</td>
+</tr>
+
+</tbody>
+</table>
+</br>
+<thead>
+<tr class="header">
+<center>
+<img src="cap_cash.jpg" height="40%" width="40%" align="middle">
+<img src="avatar_snap.jpg" height="36%" width="36%" align="middle">
+</center>
+</tr>
+</thead>
+
+</table></br>
+
+Note that the adjustment for inflation is to 2010 because all but two weeks of *Avatar*'s theatrical release was in 2010. Even with the inflation adjusted gross for *Endgame*, the numbers just don't even compare. Ok but you will say "hey wait a minute Marvel built up the hype of this movie for 11 years!". And to that I would give you: Iron Man. (Back in Black would play in the background if I could add music). And for those of you who then point the finger at the recession, turns out a recession is great for movies. ['In Downturn, Americans Flock to the Movies'](https://www.nytimes.com/2009/03/01/movies/01films.html)
+
+<table>
+<caption>`r table_nums('tab_6')` Iron Man comparison</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;", class="iron"><img src="ironman_1.png" alt="" vspace=12 height=100 width=100></img></th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Domestic Gross</td>
+<td style="text-align: center;" class="tbltxt">\$98,618,668</td>
+<td style="text-align: center;" class="tbltxt">\$77,025,481</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Foreign Gross</td>
+<td style="text-align: center;" class="tbltxt">\$99,055,472</td>
+<td style="text-align: center;" class="tbltxt">\$164,545,565</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt"># Domestic Theaters</td>
+<td style="text-align: center;" class="tbltxt">4,105</td>
+<td style="text-align: center;" class="tbltxt">3,452</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Revenue Per Theater</td>
+<td style="text-align: center;" class="tbltxt">\$24,024</td>
+<td style="text-align: center;" class="tbltxt">\$22,313</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Year Released</td>
+<td style="text-align: center;" class="tbltxt">2008</td>
+<td style="text-align: center;" class="tbltxt">2009</td>
+</tr>
+</tbody>
+</table>
+
+</table>
+
+But you might look at this and think Iron Man was released in 2008, *Avatar* was released at the end of 2009 with the majority of the box office falling into 2010. I now give you....Iron Man 2. Iron Man 2 is probably the most comparable to *Avatar*. The sequel to the beginning of the MCU was not only released a few months after *Avatar* but it was the first (and one of the few) major franchise film to be released during *Avatar*'s reign.  
+
+<table>
+<caption>`r table_nums('tab_7')` Iron Man 2 comparison</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;"></th>
+<th style="text-align: center;", class="iron"><img src="ironman_2.png" alt="" vspace=5 height=100 width=100></img></th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Domestic Gross</td>
+<td style="text-align: center;" class="tbltxt">\$128,122,480</td>
+<td style="text-align: center;" class="tbltxt">\$77,025,481</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Foreign Gross</td>
+<td style="text-align: center;" class="tbltxt">\$92,643,790</td>
+<td style="text-align: center;" class="tbltxt">\$164,545,565</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt"># Domestic Theaters</td>
+<td style="text-align: center;" class="tbltxt">4,380</td>
+<td style="text-align: center;" class="tbltxt">3,452</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Revenue Per Theater</td>
+<td style="text-align: center;" class="tbltxt">\$29,252</td>
+<td style="text-align: center;" class="tbltxt">\$22,313</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Year Released</td>
+<td style="text-align: center;" class="tbltxt">2010</td>
+<td style="text-align: center;" class="tbltxt">2009</td>
+</tr>
+</tbody>
+</table>
+
+
+Ok I will admit that *Avatar* clearly has the edge in the Foreign category compared to both Iron Man and Iron Man 2, where it grossed almost 100 million more than these two opening weekend. In only two weeks *Avatar* became the number one movie of the 'Holiday' season. *Avatar* also generated a decent revenue per theater number despite only opening in about 1000 less theaters than Iron Man 2. But there is a hidden factor that no one really mentions with the numbers. According to box-office experts, *Avatar*'s marketing strategy emphasized the appeal of the cinematic experience in IMAX and 3D to sell more premium tickets and generate repeat viewings. Back then 3-D and IMAX showings could charge an average of three dollars more per ticket. Combine that with a 34 week first theatrical release and relatively low box office competition I'd say that's a great way to do well at the box office. 
+
+## Weekly Performance
+
+One major catalyst for *Avatar* was that it was in theaters for 34 weeks. 34 weeks people! That's the better part of a year. Not to mention that it was re-released in theaters for another 12 weeks after that! In fact if you look at the longest running movies in first theatrical release and total revenue rankings these charts tend to line up. Of course most of these movies had multiple re-releases, but the number of weeks corresponds to original distribution or theatrical release.  
+
+It is hard to know what the source of the lengthy theatrical release is. Could it be that the movie is doing so well that the theaters keep it longer? Or could it be that the theaters agreement with the movie was longer than usual? It is hard to find data or information about that but we do know that *Avatar* had pretty smooth sailing through the box office with a lack of competition and higher prices for the IMAX and 3D tickets. It makes sense that theaters would hang on to a winner if it came through the doors. But if *Avatar* had low competition that is one more reason that *Endgame*'s performance is so impressive. *Endgame* was going up against a summer box office with huge franchise names which included competition from its own studio, Disney. *Avatar* went 11 weeks before it faced a big name, 'Alice in Wonderland' (if you consider that big) where *Endgame* only had a two weeks before the next big movie with perhaps a somewhat similar audience, Pokemon: Detective Pikachu. However, if you're like me and aren't as impressed with *Avatar*'s numbers as everyone else seems to be, this one data point might change your mind. 
+
+```{r, echo=FALSE}
+
+
+df2 <- av_dom_wekly[34,c("Date", "Rank", "Weekly", "Theaters", "Cum_gross", "Tickets", "Week_no" )]
+df2$Weekly <- paste('$',formatC(round(df2$Weekly, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+df2$Cum_gross<- paste('$',formatC(round(df2$Cum_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+
+kable(df2, row.names=FALSE, align=c('lccccc'),col.names=c("Week", "Week Rank", "Week Gross", "# Theaters", "Cumulative Gross","Tickets Sold", "Week Number"), caption=table_nums('tab_8',caption="Avatar Last Theatrical Week"),
+             longtable = FALSE, format="html")  %>%
+      kable_styling(latex_options = c("striped", "scale_down", "HOLD_position"),
+                    full_width = T, font_size = 16, position = "left")
+```
+
+*Avatar* was in one theater the last week of the original release and it made over ten grand! Assuming around an eight dollar ticket the 1400 tickets sold makes sense. 1400 people came to see it in a period of six days and averaged about 233 people per day. Ok that is pretty impressive. I don't think you'd find many movies that perform that well in one theater on week 34. 
+
+Either way *Avatar* was generating consistent revenue for a lengthy amount of time compared to other films. Other movies in the past that have had longer theatrical releases also tend to be among the top performers. Below is the current ranking of all-time domestic adjusted gross box office. Notice that all of the movies in the top 10 have a longer than is now typical theatrical run. 
+
+```{r, echo=FALSE}
+df <- read.csv(here('top_box_office.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+colnames(df) <- c("rank", "title", "studio", "adjust_gross", "un_gross", "year", "weeks_released")
+
+df$adjust_gross <- paste('$',formatC(round(df$adjust_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+
+df$un_gross <- paste('$',formatC(round(df$un_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+
+df <- df[,c("rank", "title", "adjust_gross", "un_gross", "year", "weeks_released")]
+
+
+kable(df, row.names=FALSE, align=c('l','l', 'c', 'c', 'c','c'),col.names=c('Overall Rank', "Movie", "Adj. Lifetime Gross", "Lifetime Gross", "Year", "Weeks in Theater"), caption=table_nums("tab_9", caption="Adjusted Domestic All Time Box Office"),
+             longtable = FALSE, format="html")  %>%
+      kable_styling(latex_options = c("striped", "scale_down", "HOLD_position"),
+                    full_width = T, font_size = 16, position = "left")
+```
+
+
+
+```{r, echo=FALSE}
+df <- read.csv(here('top_dom_box_office.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+colnames(df) <- c("rank", "title", "studio", "unadjust_gross", "year", "weeks_released")
+
+df$unadjust_gross <- paste('$',formatC(round(df$unadjust_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+
+
+df <- df[,c("rank", "title", "unadjust_gross", "year", "weeks_released")]
+
+
+kable(df, row.names=FALSE, align=c('l','l', 'c', 'c', 'c'),col.names=c('Overall Rank', "Movie", "Lifetime Gross", "Year", "Weeks in Theater"), caption=table_nums("tab_10", caption="Unadjusted Domestic All Time Box Office"),
+             longtable = FALSE, format="html")  %>%
+      kable_styling(latex_options = c("striped", "scale_down", "HOLD_position"),
+                    full_width = T, font_size = 16, position = "left")
+```
+
+\* *indicates multiple releases.*
+
+
+Below is an interactive chart that shows the weekly performance of *Endgame* and *Avatar* side by side. Each chart shows the week-by-week individual, cumulative, percent change, and weekly rank in gross revenue for the movie. One notable difference between the two movies is the Weekly Rank in gross revenue. *Avatar* clearly stays on top for longer than *Endgame* and this contributed to its long lasting success in theaters. *Avatar* remained in the top ten movies until week 14. *Endgame* on the other hand was out of the top ten by week eight. 
+
+
+```{r, echo=FALSE, warnings=FALSE}
+
+
+
+m <- list(
+  l = 75,
+  r = 50,
+  b = 100,
+  t = 100,
+  pad = 4
+)
+
+cols_av_comb <- c("a_Date", "a_Rank", "a_Weekly", "a_Pct_change", "a_Theaters", "a_Tht_change", "a_Avg_change", "a_Cum_gross", "a_Week_no", "a_Tickets")
+av_dom_wekly2 <- av_dom_wekly
+colnames(av_dom_wekly2) <- cols_av_comb
+comb_data <- data.frame(end_dom_wekly,av_dom_wekly2[1:20,])
+
+#new bar chart
+p <- plot_ly(comb_data, x = ~Week_no, y = ~Gross, type = 'bar', name = 'Endgame Gross', marker = list(color = '#4F17A4'),width = 900, height = 500) %>%
+  add_trace(y = ~a_Weekly, name = "Avatar Gross", marker = list(color = '#2498FE')) %>%
+  add_trace(y = ~Cum_gross, name = "Endgame Cumulative Gross", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Cum_gross, name = "Avatar Cumulative Gross", marker = list(color = '#2498FE'),visible=F) %>%
+    add_trace(y = ~Tickets, name = "Endgame Tickets Sold", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Tickets, name = "Avatar Tickets Sold", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Gross_adj, name = "Endgame Adjusted Gross", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Weekly, name = "Avatar Gross", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Pct_change*100, name = "Engame Change", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Pct_change*100, name = "Avatar Change", marker = list(color = '#2498FE'),visible=F) %>%
+    add_trace(y = ~Rank, name = "Engame Rank", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Rank, name = "Avatar Rank", marker = list(color = '#2498FE'),visible=F) %>%
+    layout(autosize = F, margin = m, showlegend = TRUE, barmode='group',legend = list(y=0.4, xanchor ='left', yanchor = 'top'),
+    title = "Avatar v Endgame Weekly Performance",
+    yaxis = list(title = "Millions", dtick=25000000),
+    xaxis = list(title="Week",ticktext = end_dom_wekly$Week_no, tickvals=end_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, T, F, F,F,F,F,F,F,F,F)), list(yaxis=list(title="Millions", dtick=25000000))),
+               label = "Weekly Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, T, T,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Cumulative Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, F,F,F,T, T,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Tickets"))),
+               label = "Tickets Sold"),
+             list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,T,T,F,F,F,F)), list(yaxis=list(title="Inf. Adj. Gross", dtick=50000000))),
+               label = "Inf. Adj. Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,T,T,F,F)), list(yaxis=list(title="Gross Pct Change"))),
+               label = "Gross Pct Change"),
+                    list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,F,F,T,T)), list(yaxis=list(title="Rank",range=list(0,20)))),
+               label = "Weekly Rank")
+          )
+        
+        )
+    )
+    )
+  
+
+p
+
+#Set colors, titles, gridlines
+
+
+
+
+#Set scale
+
+#  add_lines(y = ~Theaters, name = "Theater Count", visible = F) %>%
+#  add_lines(y = ~Tht_change, name = "Theater Count", visible = F) %>%
+#  add_lines(y = ~Rank, name = "Weekly Rank", visible = F) %>%
+
+```
+
+## Weekend Performance
+```{r, echo=FALSE}
+
+
+cols_av_comb <- c("a_Date", "a_Rank", "a_Weekly", "a_Pct_change", "a_Theaters", "a_Tht_change", "a_Avg_change", "a_Cum_gross", "a_Week_no", "a_Tickets")
+av_dom_weknd2 <- av_dom_weknd
+colnames(av_dom_weknd2) <- cols_av_comb
+comb_data <- data.frame(end_dom_weknd,av_dom_weknd2[1:20,])
+
+#new bar chart
+p <- plot_ly(comb_data, x = ~Week_no, y = ~Gross, type = 'bar', name = 'Endgame Weekend Gross', marker = list(color = '#4F17A4'),width = 900, height = 500) %>%
+  add_trace(y = ~a_Weekly, name = "Avatar Weekend Gross", marker = list(color = '#2498FE')) %>%
+  add_trace(y = ~Rank, name = "Engame Tickets Sold", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Rank, name = "Avatar Tickets Sold", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Rank, name = "Engame Rank", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Rank, name = "Avatar Rank", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Pct_change*100, name = "Engame Change", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Pct_change*100, name = "Avatar Change", marker = list(color = '#2498FE'),visible=F) %>%
+    layout(autosize = F, margin = m, showlegend = TRUE, barmode='group',legend = list(y=0.4, xanchor ='left', yanchor = 'top'),
+    title = "Avatar v Endgame Weekend Performance",
+    yaxis = list(title = "Millions", dtick=25000000),
+    xaxis = list(title="Weekend",ticktext = end_dom_weknd$Week_no, tickvals=end_dom_weknd$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, T,F,F, F, F,F,F)), list(yaxis=list(title="Millions", dtick=25000000))),
+               label = "Weekend Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F,F,T,T,F,F,F,F)), list(yaxis=list(title="Tickets"))),
+               label = "Tickets Sold"),
+                    list(method = "update",
+               args = list(list(visible=list(F,F,F,F,T,T,F,F)), list(yaxis=list(title="Rank",range=list(0,20)))),
+               label = "Weekend Rank"),
+            list(method = "update",
+               args = list(list(visible=list(F,F,F,F,F,F,T,T)), list(yaxis=list(title="Gross Pct Change"))),
+               label = "Gross Pct Change")
+          )
+        
+        )
+    )
+    )
+  
+
+p
+
+
+
+
+```
+
+Both weekend and weekly performance charts under the 'Pct Change' option show how much revenue for *Endgame* changed week-to-week compared to *Avatar*. *Avatar*'s performance here shows consistency with theater attendance. 
+
+## Foreign Performance
+
+<table>
+<caption>`r table_nums('tab_11')` Foreign stats</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" class="avat"></th>
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Foreign Gross (MM)</td>
+<td style="text-align: center;" class="tbltxt">\$1,937.9</td>
+<td style="text-align: center;" class="tbltxt">\$2,029.2</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Pct. of Total</td>
+<td style="text-align: center;" class="tbltxt">69.3\%</td>
+<td style="text-align: center;" class="tbltxt">72.2\%</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Countries with theatrical release</td>
+<td style="text-align: center;" class="tbltxt">56</td>
+<td style="text-align: center;" class="tbltxt">76</td>
+
+</tr>
+
+</tbody>
+</table>
+
+Foreign releases can make a huge difference in worldwide gross for obvious reasons. In this case, almost 3/4 of the worldwide gross number for *Avatar* came from releases in foreign countries. We can also see that *Avatar* had a much wider foreign release (76 countries) compared to *Avengers: Endgame* (56 countries). Of course smaller countries will tend to contribute smaller amounts to overall box office than large countries like Russia or China. The charts below examine this relationship by looking at the total population of a country vs. the total amount grossed. The idea with these charts is if a country falls toward the lower right portion than the movie was much less widely popular than the countries that fall into the top left area. If there is a high population, high popularity foreign release it will look like the China circle in the *Endgame* plot. 
+
+
+```{r, echo=FALSE, warnings=FALSE, message=FALSE}
+
+av_for <- read.csv(here('avatar_foreign.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+#end_dom_weknd <- read.csv(here('endgame_domestic_weekend.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+
+cols_for <- c("country", "distribution", "release_date", "open_gross", "open_share", "gross","gross_share", "population", "region")
+
+colnames(av_for) <- cols_for
+#colnames(end_dom_weknd) <- cols
+
+
+#df$un_gross <- paste('$',formatC(round(df$un_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+#specify more parameters
+#color scheme
+#display country name
+
+p <- suppressWarnings(plot_ly(av_for, type='scatter',  size=av_for$gross_share,   mode = 'markers', width = 900, height = 500,
+  x = ~gross, y = ~population,
+  color = ~region, colors='Set1', marker = list(sizemode='diameter'),
+  hoverinfo='text',
+     text = ~paste('<b>', country, '</b></br>',
+                      '</br> Gross Share: ', paste(round(gross_share*100,digits = 2),'%',sep=""),#convert units here
+                      '</br> Open Gross: ', paste('$',formatC(round(open_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE),sep=""))
+)%>% layout(autosize = F, margin = m,
+    title = "Avatar Foreign Performance",
+    yaxis = list(title = "Population (Thousands)"),
+    xaxis = list(title="Overall Gross")
+))
+p
+
+
+
+
+end_for <- read.csv(here('endgame_foreign.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+#end_dom_weknd <- read.csv(here('endgame_domestic_weekend.csv'), stringsAsFactors = FALSE, header = TRUE)
+
+
+cols_for <- c("country", "distribution", "release_date", "open_gross", "gross_share", "gross", "dt", "population", "region")
+
+colnames(end_for) <- cols_for
+#colnames(end_dom_weknd) <- cols
+
+
+#df$un_gross <- paste('$',formatC(round(df$un_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE))
+#specify more parameters
+#color scheme
+#display country name
+
+p <- suppressWarnings(plot_ly(end_for, type='scatter', size=~gross_share*10,    mode = 'markers', width = 900, height = 500,
+  x = ~gross, y = ~population,
+  color = ~region, colors='Set1', marker = list(sizemode='diameter'),
+  hoverinfo='text',
+     text = ~paste('<b>', country, '</b></br>',
+                      '</br> Gross Share: ', paste(round(gross_share*100,digits = 2),'%',sep=""),#convert units here
+                      '</br> Open Gross: ', paste('$',formatC(round(open_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE),sep=""))
+)%>% layout(autosize = F, margin = m,
+    title = "Endgame Foreign Performance",
+    yaxis = list(title = "Population (Thousands)"),
+    xaxis = list(title="Overall Gross")
+))
+p
+
+
+missed_rev <- sum(av_for[which(!(av_for$country %in% end_for$country)), 'gross'])
+```
+
+The growth in China sticks out in a large way, perhaps the Chinese weren't as interested in *Avatar* as *Endgame* but to go from 9\% of the best box office of all time to 21\% of the top box office could be a result of the growing movie audience in China. As more movies are allowed into the country and all the marketing/push that comes along with that. Also something random is that Avengers didn't have a release in any of the Caribbean countries.  
+
+If *Avatar* was released in just the same 56 countries as *Avengers: Endgame* it would have missed out on `r dollar(missed_rev)` in gross box office revenue. This amounts to a `r round(missed_rev/2789679794*100,3)`\% decrease in overall box office revenue which would have put the total at `r dollar(2789679794-missed_rev)`. This of course would have still put *Avatar* in front for Worldwide Gross. 
+
+
+## Theater Count
+
+The chart below shows the theatrical performance in terms of number of theaters and how much they changed during release. Here we can see the manifestation of the lack of competition at the theater throughout the first weeks of *Avatar*'s release. *Avatar* was kept in more theaters longer which could be a result of theaters trying to keep a steady audience given the limited successful options at the time. It could also have been a longer contract for theaters which means that they have to wait longer for an increased percentage of gross ticket sales. In any case, don't be fooled here by just the theater count. There could be a lot of other factors contributing to *Avatar*'s longer lasting theater presence. But still, even the re-release of *Endgame* couldn't beat out the number of theaters showing *Avatar* during week ten and on. This could be due to the changing relationships between theaters and studios. 
+
+```{r, echo=FALSE}
+
+p <- plot_ly(comb_data, x = ~Week_no, y = ~Theaters, type = 'bar', name = 'Endgame Theater Count', marker = list(color = '#4F17A4'),width = 900, height = 500) %>%
+  add_trace(y = ~a_Theaters, name = "Avatar Theater Count", marker = list(color = '#2498FE')) %>%
+  add_trace(y = ~Tht_change, name = "Endgame Theater Count Change", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Tht_change, name = "Avatar Theater Count Change", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Avg_change, name = "Endgame Average Revenue/Theater", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Avg_change, name = "Avatar Average Revenue/Theater", marker = list(color = '#2498FE'),visible=F) %>%
+    add_trace(y = ~Rank, name = "Engame Rank", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Rank, name = "Avatar Rank", marker = list(color = '#2498FE'),visible=F) %>%
+    layout(autosize = F, margin = m, showlegend = TRUE, barmode='group',legend = list(y=0.4, xanchor ='left', yanchor = 'top'),
+    title = "Avatar v Endgame Theater Performance",
+    yaxis = list(zeroline = TRUE, autorange=FALSE,range=list(0,5000)),
+    xaxis = list(title="Week",ticktext = end_dom_wekly$Week_no, tickvals=end_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, T,F,F,F,F,F)), list(yaxis=list(title="Number of Theaters"))),
+               label = "Theater Count"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, T, T,F,F,F,F,F,F)), list(yaxis=list(title="Pct. Change"))),
+               label = "Theater Change"),
+             list(method = "update",
+               args = list(list(visible=list(F, F,T,T,F,F,F,F)), list(yaxis=list(title="Avg. Revenue per Theater", dtick=50000000))),
+               label = "Average Revenue/Theater"),
+                    list(method = "update",
+               args = list(list(visible=list(F, F,F,F,F,F,T,T)), list(yaxis=list(title="Rank",range=list(0,20)))),
+               label = "Weekly Rank")
+          )
+        
+        )
+    )
+    )
+  
+
+p
+
+
+
+
+```
+
+## Overall Performance
+
+<table>
+<caption>`r table_nums('tab_12')` Overall Stats</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" class="avat"></th>
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Worldwide Gross</td>
+<td style="text-align: center;" class="tbltxt">\$2,796,274,401 </td>
+<td style="text-align: center;" class="tbltxt">$2,789,679,794	</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Domestic Gross</td>
+<td style="text-align: center;" class="tbltxt">\$858,373,000 (Inf. Adj. \$751,671,800)</td>
+<td style="text-align: center;" class="tbltxt">$749,766,139</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Foreign Gross</td>
+<td style="text-align: center;" class="tbltxt">$1,937,901,401</td>
+<td style="text-align: center;" class="tbltxt">$2,029,172,169	</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Est. Domestic Tickets Sold</td>
+<td style="text-align: center;" class="tbltxt">95,268,900 (20 weeks)</td>
+<td style="text-align: center;" class="tbltxt">97,309,600 (34 weeks)</td>
+
+</tr>
+
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Original Theatrical Release Length</td>
+<td style="text-align: center;" class="tbltxt">20+ weeks</td>
+<td style="text-align: center;" class="tbltxt">34 weeks</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Number of Theaters Opening Weekend</td>
+<td style="text-align: center;" class="tbltxt">4,662</td>
+<td style="text-align: center;" class="tbltxt">3,452</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">3D Rank</td>
+<td style="text-align: center;" class="tbltxt">1 (opening weekend)</td>
+<td style="text-align: center;" class="tbltxt">1 (all time)</td>
+
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">IMAX Rank</td>
+<td style="text-align: center;" class="tbltxt">1 (opening weekend)</td>
+<td style="text-align: center;" class="tbltxt">1 (all time)</td>
+
+</tr>
+
+</tbody>
+</table>
+
+*Endgame* took the record for 'Fastest to \$2 billion', 'Highest 3D opening weekend gross', 'Highest initial release gross', and a few other international records from *Avatar*. Many of the records that *Endgame* broke were set by movies that followed *Avatar* but the 2009 film still holds around 42 box office [records](https://en.wikipedia.org/wiki/List_of_box_office_records_set_by_Avatar). 
+
+
+## Critical Acclaim
+
+<table>
+<caption>`r table_nums('tab_13')` Critic Response</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" class="avat"></th>
+<th style="text-align: left;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: left;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Tomatometer</td>
+<td style="text-align: left;" class="tbltxt">94% <img src="fresh.png" alt="Italian Trulli" style="width:30px;height:30px;"></td>
+<td style="text-align: left;" class="tbltxt">82% <img src="fresh.png" alt="Italian Trulli" style="width:30px;height:30px;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" class="tbltxt">Audience</td>
+<td style="text-align: left;" class="tbltxt">91%</td>
+<td style="text-align: left;" class="tbltxt">82%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Critic Ratings</td>
+<td style="text-align: left;" class="tbltxt">479</td>
+<td style="text-align: left;" class="tbltxt">306</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Audience Ratings</td>
+<td style="text-align: left;" class="tbltxt">61,111</td>
+<td style="text-align: left;" class="tbltxt">1,381,815</td>
+</tr>
+
+</tbody>
+</table>
+
+# Re-release
+
+
+<table align="middle">
+
+<thead>
+<tr class="header">
+<center>
+<img src="we_love_u_3000.jpg" height="20%" width="20%" align="middle">
+<img src="av_sp_edition.jpg" height="21.25%" width="21.25%" align="middle">
+</center>
+</tr>
+</thead>
+
+</table>
+
+Historically when studios have a box office winner there will generally be a re-release. Interestingly enough *Avatar* and *Endgame* both had a re-release but they were very different. Here's where *Avatar* may have an edge over *Endgame* in terms of what was offered during re-release. But *Endgame* clearly had more momentum for the updated release. Below is a chart that isolates the domestic weekend performance of both movies during re-release. 
+
+
+```{r, echo=FALSE}
+end_re_data <- end_dom_weknd[10:18,]
+end_re_data$Week_no <- c(1:9)
+av_re_data <- av_dom_weknd2[35:43,]
+av_re_data$a_Week_no <- c(1:9)
+comb_data <- data.frame(end_re_data,av_re_data)
+
+cols_av_comb <- c("a_Date", "a_Rank", "a_Weekly", "a_Pct_change", "a_Theaters", "a_Tht_change", "a_Avg_change", "a_Cum_gross", "a_Week_no", "a_Tickets")
+
+#new bar chart
+p <- plot_ly(comb_data, x = ~Week_no, y = ~Gross, type = 'bar', name = 'Endgame Gross', marker = list(color = '#4F17A4'),width = 900, height = 500) %>%
+  add_trace(y = ~a_Weekly, name = "Avatar Gross", marker = list(color = '#2498FE')) %>%
+  add_trace(y = ~cumsum(Gross), name = "Endgame Cumulative Gross", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~cumsum(a_Weekly), name = "Avatar Cumulative Gross", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Tickets, name = "Endgame Tickets Sold", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Tickets, name = "Avatar Tickets Sold", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Gross_adj, name = "Endgame Adjusted Gross", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Weekly, name = "Avatar Gross", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Pct_change*100, name = "Engame Change", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Pct_change*100, name = "Avatar Change", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Rank, name = "Engame Rank", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Rank, name = "Avatar Rank", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Theaters, name = "Engame Theater Count", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Theaters, name = "Avatar Theater Count", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Tht_change, name = "Engame Theater Change", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Tht_change, name = "Avatar Theater Change", marker = list(color = '#2498FE'),visible=F) %>%
+  add_trace(y = ~Avg_change, name = "Engame Revenue per Theater", marker = list(color = '#4F17A4'),visible=F) %>%
+  add_trace(y = ~a_Avg_change, name = "Avatar Revenue per Theater", marker = list(color = '#2498FE'),visible=F) %>%
+    layout(autosize = F, margin = m, showlegend = TRUE, barmode='group',legend = list(y=0.4, xanchor ='left', yanchor = 'top'),
+    title = "Avatar v Endgame Domestic Re-release Performance",
+    yaxis = list(title = "Millions", dtick=1000000),
+    xaxis = list(title="Week",ticktext = end_dom_wekly$Week_no, tickvals=end_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, T, F, F,F,F,F,F,F,F,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Millions", dtick=1000000))),
+               label = "Weekend Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, T, T,F,F,F,F,F,F,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Millions", dtick=1000000))),
+               label = "Cumulative Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,T,T,F,F,F,F,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Tickets"))),
+               label = "Tickets Sold"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,T,T,F,F,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Inf. Adj. Gross", dtick=1000000))),
+               label = "Inf. Adj. Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,T,T,F,F,F,F,F,F,F,F)), list(yaxis=list(title="Gross Pct Change"))),
+               label = "Gross Pct Change"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,F,F,T,T,F,F,F,F,F,F)), list(yaxis=list(title="Rank",range=list(0,30)))),
+               label = "Weekly Rank"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,F,F,F,F,T,T,F,F,F,F)), list(yaxis=list(title="Number of Theaters"))),
+               label = "Theater Count"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,F,F,F,F,F,F,T,T,F,F)), list(yaxis=list(title="Pct. Change"))),
+               label = "Theater Count Change"),
+          list(method = "update",
+               args = list(list(visible=list(F, F, F, F,F,F,F,F,F,F,F,F,F,F,F,F,T,T)), list(yaxis=list(title="Avg. Revenue per Theater"))),
+               label = "Average Revenue/Theater")
+          )
+        
+        )
+    )
+    )
+  
+
+p
+```
+
+The most meaningful categories to examine here are Weekend Gross, Theater Count Change, Tickets Sold, and Average Revenue per Theater. The interpretation of all these comparisons is mixed. *Endgame* had a much wider re-release than *Avatar* but *Avatar* brought in a larger audience per theater throughout the release. The percent change in weekend revenue is a little deceiving because *Avatar* went from bringing in 10 grand the last weekend to 4 million during re-release. *Endgame* went from one million to six million in the same regard. The number of tickets sold shows again that Endgame had a larger re-release audience but these were at different points relative to the theatrical release. Overall these were two very different re-releases given the timing of each one, but *Endgame* dominated the dollar amounts while *Avatar* was perhaps a higher quality re-release that delivered more value to individual theaters and brought in a consistent audience week over week.
+
+
+
+<table>
+<caption>`r table_nums('tab_14')` Re-release weekend stats</caption>
+<thead>
+<tr class="header">
+<th style="text-align: center;" class="avat"></th>
+<th style="text-align: center;", class="avenge">Avengers: Endgame</th>
+<th style="text-align: center;" class="avat">Avatar</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Release Weekend</td>
+<td style="text-align: center;" class="tbltxt">Jun 28-30</td>
+<td style="text-align: center;" class="tbltxt">Aug 27-29</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;" class="tbltxt">Weekend Gross</td>
+<td style="text-align: center;" class="tbltxt">\$6,108,700 (Inf. Adj. \$5,349,400)</td>
+<td style="text-align: center;" class="tbltxt">$4,007,750</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Gross Pct. Change</td>
+<td style="text-align: center;" class="tbltxt">207\%</td>
+<td style="text-align: center;" class="tbltxt">380\%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Length</td>
+<td style="text-align: center;" class="tbltxt">5</td>
+<td style="text-align: center;" class="tbltxt">12</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Number of Theaters</td>
+<td style="text-align: center;" class="tbltxt">2,025</td>
+<td style="text-align: center;" class="tbltxt">812</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Theater Pct. Change</td>
+<td style="text-align: center;" class="tbltxt">1040\%</td>
+<td style="text-align: center;" class="tbltxt">811\%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;" class="tbltxt">Special Items</td>
+<td style="text-align: center;" class="tbltxt">Poster, intro, deleted scene</td>
+<td style="text-align: center;" class="tbltxt">About eight new scenes</td>
+</tr>
+
+</tbody>
+</table>
+
+
+I will admit, I thought the *Endgame* re-release was pretty sloppy. Its came across like they met together two weeks-before and decided to try and run for the *Avatar* record as fast as possible. *Avatar* on the other hand offered movie-goers a lot more additional content during the movie than *Endgame*. *Endgame* just had one deleted scene during the post credits and a brief intro by the director. Having said that, they had a 1040\% increase in the number of theaters showing the movie that weekend and they made over a million more that weekend then *Avatar* made the first weekend of re-release. That could be because people like *Endgame* a lot better or it could be because the re-release happened on week 10 of the original release. *Avatar*'s re-release happened after there was only one theater left showing it during the beginning of August 2010 and it was 36 weeks after the original release so there was much more motivation to return to theaters for fans. 
+
+I have a feeling that this won't be the last we see of the Marvel Studios re-release shenanigans. Remember how they started the end-credits scene trend? Certainly made more people stay in their seats for the credits. 
+
+
+
+
+
+<!-- # Post Theatrical Release -->
+
+<!-- <table align="middle"> -->
+
+<!-- <thead> -->
+<!-- <tr class="header"> -->
+<!-- <center> -->
+<!-- <img src="end_dvd.jpg" height="20%" width="20%" align="middle"> -->
+<!-- <img src="av_dvd.jpg" height="25%" width="25%" align="middle"> -->
+<!-- </center> -->
+<!-- </tr> -->
+<!-- </thead> -->
+
+<!-- </table> -->
+
+
+<!-- ```{r, echo=FALSE} -->
+
+<!-- av_dvd <- read.csv('av_dvd.csv', header = TRUE, stringsAsFactors = FALSE) -->
+<!-- df2 <- av_dom_wekly[34,c("Date", "Rank", "Weekly", "Theaters", "Cum_gross", "Week_no")] -->
+<!-- df2$Weekly <- paste('$',formatC(round(df2$Weekly, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE)) -->
+<!-- df2$Cum_gross<- paste('$',formatC(round(df2$Cum_gross, digits=0), big.mark=',', format = 'f',drop0trailing = TRUE)) -->
+
+<!-- kable(df2, row.names=FALSE, align=c('lccccc'),col.names=c("Week", "Week Rank", "Week Gross", "# Theaters", "Cumulative Gross", "Week Number"), caption=table_nums('tab_1',caption="Avatar Last Theatrical Week"), -->
+<!--              longtable = FALSE, format="html")  %>% -->
+<!--       kable_styling(latex_options = c("striped", "scale_down", "HOLD_position"), -->
+<!--                     full_width = T, font_size = 16, position = "left") -->
+<!-- ``` -->
+
+
+# Final Thoughts
+
+*Avatar* held the record for all time worldwide unadjusted gross for almost ten years along with several other notable box office records that it still holds today. It really was a huge accomplishment for its time and for the type of movie that was being presented. However, when you dig into the numbers *Avatar*'s success was a result of many factors other than perhaps being a great film. The argument that *Endgame* is a better movie than *Avatar* or vice-versa just based on the worldwide gross revenue number is really naive. *Avatar*'s largest differentiating factor was the technology used to film the movie and create a really unique immersive experience. But *Avatar* falls into a category of films that make a lot of money because they are in the theater for so much longer than normal and has relatively low competition. 
+
+The main factors I found that contributed to a record-breaking box office number for *Avatar* were:
+
+- 34 week release time followed by 12 week re-release. 
+- Large distribution across the world (76 countries).
+- Lack of competition at the box office.
+- Higher ticket sales during economic recession. 
+- Higher average ticket prices (IMAX, 3D).
+
+
+The main factors I found that makes *Avengers: Endgame* performance so impressive were:
+
+- Large competitive summer box office environment.
+- Smaller foreign distribution than *Avatar*.
+- Overall [declining](https://thehustle.co/why-is-movie-theater-popcorn-so-outrageously-expensive/) theater audience.
+- Record set by 46 week release broken by week 15.
+
+Are *Avengers: Endgame* and *Avatar* on the same level becuase of the similarity in global box office? I would say no based on the factors listed above. However each movie stands on its own as an impressive box office winner. But I can say for sure that the next time I hear someone discuss the quality of either movie relative to one box office record number I'll roll my eyes and say....
+
+<center>
+
+<img src="of_course.gif" height="60%" width="60%" align="middle">
+
+</center>
+
+Of course *Avatar* fans shouldn't lose all hope because there could still be some box office gold that lies ahead.
+
+</br>
+<table align="middle">
+
+<thead>
+<tr class="header">
+<center>
+<img src="five_avatars.png" height="50%" width="50%" align="middle">
+<img src="five_to_go.gif" height="30%" width="30%" align="middle">
+</center>
+</tr>
+</thead>
+
+</table>
+
+</br>
+
+# Sources
+
+[1] (n.d.). Box Office Mojo. Retrieved from https://www.boxofficemojo.com/
+
+
+[2] (n.d.). Movies: TV Shows: Movie Trailers: Reviews. Retrieved from https://www.rottentomatoes.com/
+
+
+[3] (n.d.). Population, total. Retrieved from https://data.worldbank.org/indicator/sp.pop.totl?end=2010&start=1960
+
+[4] (n.d.). Central America Population 2019. Retrieved from http://worldpopulationreview.com/continents/central-america-population/
+
+[5] (n.d.). Eastern Africa Population (LIVE). Retrieved from https://www.worldometers.info/world-population/eastern-africa-population/
+
+[6] (n.d.). Retrieved from https://www.internetworldstats.com/list1.htm
+
+[7] What's New In The Avatar Special Edition, And Why You Should Go See It. (2018, October 8). Retrieved from https://www.cinemablend.com/new/What-Avatar-Special-Edition-Why-You-Should-Go-See-It-20393.html
+
+[8] Harris, D. (n.d.). ‘Avatar’ online trailer claims top spot. Retrieved from https://variety.com/2009/digital/news/avatar-online-trailer-claims-top-spot-1118012187/
+
+[9] Pomerantz, D. (2012, July 11). Is Avatar Really King Of The Box Office? Retrieved from https://www.forbes.com/2010/01/27/avatar-box-office-business-entertainment-avatar.html#6cdaea6870ba
+
+[10] Plotly Technologies Inc. Collaborative data science. Montréal, QC, 2015. https://plot.ly.
+
+# Appendix
+
+The interactive charts shown below allow further examination of the data sets used in this article. 
+
+## Weekly
+```{r,echo=FALSE}
+p <- plot_ly(end_dom_wekly, x = ~Week_no,width = 900, height = 500) %>%
+  add_lines(y = ~Gross, name = "Gross", line = list(color = '#4F17A4', width = 4)) %>%
+  add_lines(y = ~Cum_gross, name = "Cumulative Gross", line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  add_lines(y = ~Gross_adj, name = "Inf. Adj. Gross",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  add_lines(y = ~Pct_change, name = "Pct. change",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  add_lines(y = ~Rank, name = "Weekly Rank",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  layout(autosize = F, margin = m, showlegend = FALSE,
+    title = "Endgame Weekly Performance",
+    yaxis = list(title = "Millions", dtick=25000000),
+    xaxis = list(title="Week",ticktext = end_dom_wekly$Date, tickvals=end_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, F, F, F,F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Weekly Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, T, F, F, F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Cumulative Gross"),
+             list(method = "update",
+               args = list(list(visible=list(F,F,T,F,F)), list(yaxis=list(title="Inf. Adj. Gross", dtick=50000000))),
+               label = "Inf. Adj. Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F,F,F,T,F)), list(yaxis=list(title="Gross Pct Change"))),
+               label = "Gross Pct Change"),
+                    list(method = "update",
+               args = list(list(visible=list(F,F,F,F,T)), list(yaxis=list(title="Rank",range=list(0,70)))),
+               label = "Weekly Rank")
+          )
+        
+        )
+    )
+  )
+  
+
+p
+
+p <- plot_ly(av_dom_wekly, x = ~Week_no, width = 900, height = 500) %>%
+  add_lines(y = ~Weekly, name = "Weekly Gross",line = list(color = '#2498FE', width = 4)) %>%
+  add_lines(y = ~Cum_gross, name = "Cumulative Weekly Gross", visible = F,line = list(color = '#2498FE', width = 4)) %>%
+  add_lines(y = ~Pct_change, name = "Gross Pct Change",line = list(color = '#2498FE', width = 4), visible = F) %>%
+  add_lines(y = ~Rank, name = "Weekly Rank",line = list(color = '#2498FE', width = 4), visible = F) %>%
+  layout(autosize = F, margin = m,showlegend = FALSE,
+    title = "Avatar Weekly Performance",
+    yaxis = list(title = "Millions", range=list(0,300000000)),
+    xaxis = list(title="Week",ticktext = av_dom_wekly$Date, tickvals=av_dom_wekly$Week_no),
+    updatemenus = list(
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, F, F,F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Weekly Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, T, F, F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Cumulative Gross"),
+
+          list(method = "update",
+               args = list(list(visible=list(F,F,T,F)), list(yaxis=list(title="Gross Pct Change",range=list(-1,1)))),
+               label = "Gross Pct Change"),
+          list(method = "update",
+               args = list(list(visible=list(F,F,F,T)), list(yaxis=list(title="Rank",range=list(0,70)))),
+               label = "Weekly Rank")
+          
+          
+          )
+        
+        )
+  )
+  )
+  
+
+p
+
+
+
+
+```
+
+## Weekend
+```{r,echo=FALSE}
+
+
+#Weekend
+
+p <- plot_ly(end_dom_weknd, x = ~Week_no,width = 900, height = 500) %>%
+  add_lines(y = ~Gross, name = "Week", line = list(color = '#4F17A4', width = 4)) %>%
+  add_lines(y = ~Cum_gross, name = "Cumulative Gross", line = list(color = '#4F17A4', width = 4), visible = F) %>%
+    add_lines(y = ~Gross_adj, name = "Inf. Adj. Gross",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  add_lines(y = ~Pct_change, name = "Gross Pct Change",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+   add_lines(y = ~Rank, name = "Weekend Rank",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  layout(autosize = F, margin = m, showlegend = FALSE,
+    title = "Endgame Weekend Performance",
+    yaxis = list(title = "Millions", dtick=25000000),
+    xaxis = list(title="Weekend",ticktext = end_dom_wekly$Date, tickvals=end_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T,F,F,F,F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Weekend Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F,T,F,F,F)), list(yaxis=list(title="Millions", dtick=50000000))),
+               label = "Cumulative Gross"),
+             list(method = "update",
+               args = list(list(visible=list(F,F,T,F,F)), list(yaxis=list(title="Inf. Adj. Gross", dtick=50000000))),
+               label = "Inf. Adj. Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F,F,F,T,F)), list(yaxis=list(title="Pct. Change"))),
+               label = "Pct. change"),
+          list(method = "update",
+               args = list(list(visible=list(F,F,F,F,T)), list(yaxis=list(title="Weekend Rank",range=list(0,70)))),
+               label = "Weekend Rank")
+          )
+    )
+  )
+  )  
+
+p
+
+p <- plot_ly(av_dom_weknd, x = ~Week_no, width = 900, height = 500) %>%
+  add_lines(y = ~Weekly, name = "Weekly Gross",line = list(color = '#2498FE', width = 4)) %>%
+  add_lines(y = ~Cum_gross, name = "Cumulative Weekly Gross", visible = F,line = list(color = '#2498FE', width = 4)) %>%
+  add_lines(y = ~Pct_change, name = "Gross Pct Change",line = list(color = '#2498FE', width = 4), visible = F) %>%
+  layout(autosize = F, margin = m,showlegend = FALSE,
+    title = "Avatar Weekend Performance",
+    yaxis = list(title = "Millions", range=list(0,300000000)),
+    xaxis = list(title="Weekend",ticktext = av_dom_weknd$Date, tickvals=av_dom_weknd$Week_no),
+    updatemenus = list(
+
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, F, F)), list(yaxis=list(title="Millions"))),
+               label = "Weekend Gross"),
+          list(method = "update",
+               args = list(list(visible=list(F, T, F)), list(yaxis=list(title="Millions"))),
+               label = "Cumulative Gross"),
+
+          list(method = "update",
+               args = list(list(visible=list(F,F,T)), list(yaxis=list(title="Gross Pct Change"))),
+               label = "Gross Pct Change"))
+        
+        )
+  )
+  )
+  
+
+p
+
+
+```
+
+## Theaters
+
+```{r,echo=FALSE}
+
+#Theaters
+
+p <- plot_ly(end_dom_weknd, x = ~Week_no,width = 900, height = 500) %>%
+  add_lines(y = ~Theaters, name = "Theater Count", line = list(color = '#4F17A4', width = 4)) %>%
+  add_lines(y = ~Tht_change, name = "Theater Change", line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  add_lines(y = ~Avg_change, name = "Average Revenue per Theater",line = list(color = '#4F17A4', width = 4), visible = F) %>%
+  layout(autosize = F, margin = m, showlegend = FALSE,
+    title = "Endgame Theater Performance",
+    yaxis = list(title = "Number of Theaters", zeroline = TRUE, autorange=FALSE,range=list(0,5000)),
+    xaxis = list(title="Weekend",ticktext = end_dom_wekly$Date, tickvals=end_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, F, F)), list(yaxis=list(title="Number of Theaters"))),
+               label = "Theater Count"),
+          list(method = "update",
+               args = list(list(visible=list(F, T, F)), list(yaxis=list(title="Change"))),
+               label = "Theater Change"),
+
+          list(method = "update",
+               args = list(list(visible=list(F,F,T)), list(yaxis=list(title="Revenue"))),
+               label = "Average Revenue per Theater"))
+        
+        )
+    )
+  )
+  
+
+p
+
+p <- plot_ly(av_dom_weknd, x = ~Week_no,width = 900, height = 500) %>%
+  add_lines(y = ~Theaters, name = "Theater Count", line = list(color = '#2498FE', width = 4)) %>%
+  add_lines(y = ~Tht_change, name = "Theater Change", line = list(color = '#2498FE', width = 4), visible = F) %>%
+  add_lines(y = ~Avg_change, name = "Average Revenue per Theater",line = list(color = '#2498FE', width = 4), visible = F) %>%
+  layout(autosize = F, margin = m, showlegend = FALSE,
+    title = "Avatar Theater Performance",
+    yaxis = list(title = "Number of Theaters", zeroline = TRUE),
+    xaxis = list(title="Weekend",ticktext = av_dom_wekly$Date, tickvals=av_dom_wekly$Week_no),
+    updatemenus = list(
+
+      list(
+        x=-0.1,
+        xanchor ='middle',
+        yanchor = 'top',
+        pad = list(r=10, b=5),
+        buttons = list(
+          list(method = "update",
+               args = list(list(visible=list(T, F, F)), list(yaxis=list(title="Number of Theaters"))),
+               label = "Theater Count"),
+          list(method = "update",
+               args = list(list(visible=list(F, T, F)), list(yaxis=list(title="Change"))),
+               label = "Theater Change"),
+
+          list(method = "update",
+               args = list(list(visible=list(F,F,T)), list(yaxis=list(title="Revenue"))),
+               label = "Average Revenue per Theater"))
+        
+        )
+    )
+  )
+  
+
+p
+
+
+```
+
+
