@@ -376,6 +376,8 @@ So remember next time you attend, nay, next time there IS a Jazz home game there
 
 # Sources
 
+Code used for analysis available on [GitHub](https://github.com/GuitarPro6/nba-chicken).
+
 [1] “The Cost to Reach 1,000 People: Nuanced Thoughts.” Nuanced Media, 24 May 2019, https://nuancedmedia.com/cost-reach-1000-people/.
 
 [2] “Demographics of Mobile Device Ownership and Adoption in the United States.” Pew Research Center: Internet, Science & Tech, 12 June 2019, https://www.pewinternet.org/fact-sheet/mobile/.
